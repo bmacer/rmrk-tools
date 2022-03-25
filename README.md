@@ -57,6 +57,7 @@ done
 ```
 while true; do
 ./consolidate -a consolidated_sync_dump.json raw_interim.json
+echo "sleeping 10 seconds..."
 sleep 10
 done
 ```
