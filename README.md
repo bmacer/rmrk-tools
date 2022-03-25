@@ -5,46 +5,61 @@ WS options
 --ws wss://kusama-rpc.dwellir.com
 
 1. Install rmrk-tools, polkadot, arg globally (maybe a better way?)
+```
 npm install --save-dev --global rmrk-tools@latest
 npm install --global @polkadot/api@latest
 npm install --global arg
+```
 
 2. Make and move to a new directory
+```
 mkdir runner
 cd runner
+```
 
 3. Clone RMRK Rust consolidator from github and compile (requires Rust + Cargo: https://www.rust-lang.org/tools/install)
+```
 git clone https://github.com/bmacer/rmrk2-rust-consolidator.git
 cd rmrk2-rust-consolidator
 cargo build --release
 mv ./target/release/rmrk2-rust-consolidator ../consolidate
 cd ..
 rm -rf rmrk2-rust-consolidator
+```
 
 4. Download the latest consolidated dump: https://docs.rmrk.app/syncing/ (https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link).  Call it "consolidated_sync_dump.json".  This will take 1-2 hours.
+```
 wget -O=consolidated_sync_dump.json https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link
+```
 
 5. Get the last block number from "consolidated_sync_dump.json"
+```
 last_block=$(cat ./consolidated_sync_dump.json | jq .lastBlock)
 echo $last_block
+```
 
 6. Get first raw dump
+```
 rmrk-tools-fetch --ws wss://kusama-rpc.dwellir.com --from $last_block --to $((last_block+50)) --output raw_interim.json 
+```
 
 7. While loop forever to keep getting raw data
+```
 while true; do
 echo "last block:" $last_block
 rmrk-tools-fetch --ws wss://kusama-rpc.dwellir.com --append raw_interim.json --to $((last_block+50)) 
 last_block=$(cat raw_interim.json | jq '.[-1].block')
 echo "last block:" $last_block
 done
+```
 
 8. Use Rust consolidator to consolidate raw_interim.json into consolidated_sync_dump.json on a loop
+```
 while true; do
 ./consolidate -a consolidated.json raw_interim.json
 sleep 10
 done
-
+```
 
 
 
