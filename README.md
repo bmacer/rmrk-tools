@@ -56,7 +56,7 @@ done
 8. Use Rust consolidator to consolidate raw_interim.json into consolidated_sync_dump.json on a loop
 ```
 while true; do
-./consolidate -a consolidated.json raw_interim.json
+./consolidate -a consolidated_sync_dump.json raw_interim.json
 sleep 10
 done
 ```
