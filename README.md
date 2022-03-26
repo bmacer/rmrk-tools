@@ -38,7 +38,7 @@ rm -rf rmrk2-rust-consolidator
 
 5. Download the latest consolidated dump: https://docs.rmrk.app/syncing/ (https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link).  Call it "consolidated_sync_dump.json".  This will take 1-2 hours.
 ```
-wget -O=consolidated_sync_dump.json https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link
+wget -O consolidated_sync_dump.json https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link
 ```
 
 6. Get the last block number from "consolidated_sync_dump.json"
