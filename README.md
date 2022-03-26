@@ -17,7 +17,16 @@ mkdir runner
 cd runner
 ```
 
-3. Clone RMRK Rust consolidator from github and compile (requires Rust + Cargo: https://www.rust-lang.org/tools/install)
+3. Install Rust
+```
+curl https://sh.rustup.rs -sSf | sh
+# Press 1 for default installation
+
+# Add to source
+source $HOME/.cargo/env
+```
+
+4. Clone RMRK Rust consolidator from github and compile (requires Rust + Cargo: https://www.rust-lang.org/tools/install)
 ```
 git clone https://github.com/bmacer/rmrk2-rust-consolidator.git
 cd rmrk2-rust-consolidator
@@ -27,23 +36,23 @@ cd ..
 rm -rf rmrk2-rust-consolidator
 ```
 
-4. Download the latest consolidated dump: https://docs.rmrk.app/syncing/ (https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link).  Call it "consolidated_sync_dump.json".  This will take 1-2 hours.
+5. Download the latest consolidated dump: https://docs.rmrk.app/syncing/ (https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link).  Call it "consolidated_sync_dump.json".  This will take 1-2 hours.
 ```
 wget -O=consolidated_sync_dump.json https://gateway.pinata.cloud/ipns/precon-rmrk2.rmrk.link
 ```
 
-5. Get the last block number from "consolidated_sync_dump.json"
+6. Get the last block number from "consolidated_sync_dump.json"
 ```
 last_block=$(cat ./consolidated_sync_dump.json | jq .lastBlock)
 echo $last_block
 ```
 
-6. Get first raw dump
+7. Get first raw dump
 ```
 rmrk-tools-fetch --ws wss://kusama-rpc.dwellir.com --from $last_block --to $((last_block+50)) --output raw_interim.json 
 ```
 
-7. While loop forever to keep getting raw data
+8. While loop forever to keep getting raw data
 ```
 while true; do
 echo "last block:" $last_block
@@ -53,7 +62,7 @@ echo "last block:" $last_block
 done
 ```
 
-8. Use Rust consolidator to consolidate raw_interim.json into consolidated_sync_dump.json on a loop
+9. Use Rust consolidator to consolidate raw_interim.json into consolidated_sync_dump.json on a loop
 ```
 while true; do
 ./consolidate -a consolidated_sync_dump.json raw_interim.json
